@@ -12,7 +12,8 @@ export default class YoukuSource extends BaseSource {
     this.example_urls = [
       'https://v.youku.com/v_show/id_XNTE5NjUxNjUyOA==.html',
       'https://v.youku.com/v_show/id_XMTc1OTE4ODI5Ng==.html',
-      'https://v.youku.com/v_show/id_XNTkxNDY2Nzg2MA==.html'
+      'https://v.youku.com/v_show/id_XNTkxNDY2Nzg2MA==.html',
+      'https://v.youku.com/video?vid=XMjQ4NDcxODQwOA=='
     ];
   }
 
@@ -57,7 +58,12 @@ export default class YoukuSource extends BaseSource {
   async get_vinfos_by_video_id(url) {
     const q = urlmodule.parse(url, true);
     const path = q.pathname.split('/');
-    const video_id = path.slice(-1)[0].split('.')[0].slice(3);
+    let video_id;
+    if (q.query.vid) {
+      video_id = q.query.vid;
+    } else {
+      video_id = path.slice(-1)[0].split('.')[0].slice(3);
+    }
     if (video_id) {
       // "?client_id=53e6cc67237fc59a&package=com.huawei.hwvplayer.youku&ext=show&video_id={}"
       const api_url = 'https://openapi.youku.com/v2/videos/show.json';
